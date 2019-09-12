@@ -75,6 +75,9 @@ try:
 except IndexError:
     print('File was not able to be read')
     sys.exit(1)
+except ValueError:
+    print('File was not able to be read')
+    sys.exit(1)
 
 try:
     mean = sum(V)/len(V)
