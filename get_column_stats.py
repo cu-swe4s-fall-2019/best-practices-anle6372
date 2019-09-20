@@ -41,58 +41,65 @@ import sys
 import math
 import argparse
 
-parser = argparse.ArgumentParser(description='Do statistics'
-                                             ' on a column of integers.')
 
-parser.add_argument('--file_name', type=str,
-                    help='Name of the file', required=True)
-
-parser.add_argument(
-                    '--column_number', type=str,
-                    help='The column number', required=True)
-
-args = parser.parse_args()
+def get_mean(X):
+    return sum(X)/len(X)
 
 
-try:
-    f = open(args.file_name, 'r')
-except FileNotFoundError:
-    print('File was not able to be opened')
-    sys.exit(1)
-
-V = []
-
-try:
-    int(args.column_number)
-except ValueError:
-    print('Column number could not be read')
-    sys.exit(1)
-
-try:
-    for l in f:
-        A = [int(x) for x in l.split()]
-        V.append(A[int(args.column_number)])
-except IndexError:
-    print('File was not able to be read')
-    sys.exit(1)
-except ValueError:
-    print('File was not able to be read')
-    sys.exit(1)
-
-try:
-    mean = sum(V)/len(V)
-except ArithmeticError:
-    print('Could not calculate the mean')
-    sys.exit(1)
-
-try:
-    stdev = math.sqrt(sum([(mean-x)**2 for x in V]) / len(V))
-except ArithmeticError:
-    print('Could not calculate the standard deviation')
-    sys.exit(1)
+def get_std(X):
+    return math.sqrt(sum([((sum(X)/len(X))-x)**2 for x in X]) / len(X))
 
 
 def main():
+    parser = argparse.ArgumentParser(description='Do statistics'
+                                                 ' on a column of integers.')
+
+    parser.add_argument('--file_name', type=str,
+                        help='Name of the file', required=True)
+
+    parser.add_argument(
+                        '--column_number', type=str,
+                        help='The column number', required=True)
+
+    args = parser.parse_args()
+
+    try:
+        f = open(args.file_name, 'r')
+    except FileNotFoundError:
+        print('File was not able to be opened')
+        sys.exit(1)
+
+    V = []
+
+    try:
+        int(args.column_number)
+    except ValueError:
+        print('Column number could not be read')
+        sys.exit(1)
+
+    try:
+        for l in f:
+            A = [int(x) for x in l.split()]
+            V.append(A[int(args.column_number)])
+    except IndexError:
+        print('File was not able to be read')
+        sys.exit(1)
+    except ValueError:
+        print('File was not able to be read')
+        sys.exit(1)
+
+    try:
+        mean = get_mean(V)
+    except ArithmeticError:
+        print('Could not calculate the mean')
+        sys.exit(1)
+
+    try:
+        stdev = get_std(V)
+    except ArithmeticError:
+        print('Could not calculate the standard deviation')
+        sys.exit(1)
+
     print('mean:', mean)
     print('stdev:', stdev)
 
